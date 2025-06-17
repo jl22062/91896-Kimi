@@ -63,13 +63,28 @@ def searchTask():
 def updateTask():
     pass
 
-def newTask():
-    pass
-#with ID, status,
+def newTask(tasks):
+    while True:
+        fields = ["Title", "Description","Priority","Status"]
+        info = gui.multenterbox("Please enter task details","Add new tasks", fields)
+        if info is None:
+            return
+        title, desc, priority, status = info[0].strip(),info[1],info[2],info[3]
+        if not title or not desc or not priority or not status:
+            gui.msgbox("Please enter all values", "Error")
+            continue
+        if title in tasks:
+            gui.msgbox("Title already exists", "Error")
+            continue
+        ID = tasks["T"+ str(len(tasks)+1)]
+        tasks["T5"] = {"title":title, "description":desc, "priority":priority, "status":status}
 
-title  ="Task manager"
-msg = "Select your task:"
+def startUp():
+    title  ="Task manager"
+    msg = "Select your task:"
 
-for i in tasks:
-    taskNames = [tasks[i]["title"] for i in tasks]
-choice = gui.choicebox(msg, title, taskNames)
+    for i in tasks:
+        taskNames = [tasks[i]["title"] for i in tasks]
+    choice = gui.choicebox(msg, title, taskNames)
+
+newTask(tasks)
