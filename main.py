@@ -25,35 +25,51 @@ tasks = {
         "title" : "Design Homepage",
         "description": "Create a mockup of the homepage",
         "priority": 3,
-        "progress": "In Progress"
+        "status": "In Progress"
     },
     "T2": {
         "title" : "Implement Login page",
         "description": "Create the Login page for the website",
         "priority": 3,
-        "progress": "Blocked"
+        "status": "Blocked"
     },
     "T3": {
         "title" : "Fix navigation menu",
         "description": "Fix the navigation menu to be more user-friendly",
         "priority": 1,
-        "progress": "Not Started"
+        "status": "Not Started"
     },
     "T4": {
         "title" : "Add payment processing",
         "description": "Implement payment processing for the website",
         "priority": 2,
-        "progress": "In Progress"
+        "status": "In Progress"
     },
     "T5": {
         "title" : "Create an About Us page",
         "description": "Create a page with information about the company",
         "priority": 1,
-        "progress": "Blocked"
+        "status": "Blocked"
     },
 }
 
-def startUp():
+def newTask():
     pass
 
-startUp()
+def searchTask():
+    pass
+# search by name or ID
+
+def updateTask():
+    pass
+
+def newTask():
+    pass
+#with ID, status,
+
+title  ="Task manager"
+msg = "Select your task:"
+
+for i in tasks:
+    taskNames = [tasks[i]["title"] for i in tasks]
+choice = gui.choicebox(msg, title, taskNames)
