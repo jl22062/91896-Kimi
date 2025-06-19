@@ -25,7 +25,8 @@ tasks = {
         "title" : "Design Homepage",
         "description": "Create a mockup of the homepage",
         "priority": 3,
-        "status": "In Progress"
+        "status": "In Progress",
+        "assignee": "JSM"
     },
     "T2": {
         "title" : "Implement Login page",
@@ -60,7 +61,7 @@ def searchTask():
 def updateTask():
     pass
 
-def newTask(tasks):
+def newTask():
     while True:
         fields = ["Title", "Description","Priority","Status"]
         info = gui.multenterbox("Please enter task details","Add new tasks", fields)
@@ -78,6 +79,7 @@ def newTask(tasks):
             continue
         taskID = "T" + str(len(tasks) + 1)
         tasks[taskID] = {"title":title, "description":desc, "priority":priority, "status":status}
+        return
 
 def listTasks():
     title  ="Task manager"
@@ -86,11 +88,18 @@ def listTasks():
     for i in tasks:
         taskNames = [tasks[i]["title"] for i in tasks]
     choice = gui.multchoicebox(msg, title, taskNames)
+    if choice is None:
+        return
 
 def startUp():
-    choices = ["List task","a","a"]
-    init = gui.buttonbox("Welcome to [Generic Task Manager], what would you like to do today?","Task manager",choices)
-    if init == "List task":
-        listTasks()
+    while True:
+        choices = ["List task","New task","a"]
+        init = gui.buttonbox("Welcome to [Generic Task Manager], what would you like to do today?","Task manager",choices)
+        if init == "List task":
+            listTasks()
+        elif init == "New task":
+            newTask()
+        elif init is None:
+            exit()
         
 startUp()
