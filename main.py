@@ -53,9 +53,6 @@ tasks = {
     },
 }
 
-def newTask():
-    pass
-
 def searchTask():
     pass
 # search by name or ID
@@ -73,18 +70,27 @@ def newTask(tasks):
         if not title or not desc or not priority or not status:
             gui.msgbox("Please enter all values", "Error")
             continue
-        if title in tasks:
+        elif not priority.isdigit():
+            gui.msgbox("Priority must be a number", "Error")
+            continue
+        elif title in tasks:
             gui.msgbox("Title already exists", "Error")
             continue
-        ID = tasks["T"+ str(len(tasks)+1)]
-        tasks["T5"] = {"title":title, "description":desc, "priority":priority, "status":status}
+        taskID = "T" + str(len(tasks) + 1)
+        tasks[taskID] = {"title":title, "description":desc, "priority":priority, "status":status}
 
-def startUp():
+def listTasks():
     title  ="Task manager"
     msg = "Select your task:"
 
     for i in tasks:
         taskNames = [tasks[i]["title"] for i in tasks]
-    choice = gui.choicebox(msg, title, taskNames)
+    choice = gui.multchoicebox(msg, title, taskNames)
 
-newTask(tasks)
+def startUp():
+    choices = ["List task","a","a"]
+    init = gui.buttonbox("Welcome to [Generic Task Manager], what would you like to do today?","Task manager",choices)
+    if init == "List task":
+        listTasks()
+        
+startUp()
