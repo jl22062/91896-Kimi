@@ -59,9 +59,27 @@ tasks = {
 }
 
 def searchTask():
-    pass
-# search by name or ID
+    searchTerms = gui.enterbox("Please enter what you want to search")
+    for taskID in tasks:
+        print(taskID)
+        if searchTerms.lower() == taskID.lower():
+            gui.msgbox(msg=f"Found task with the ID: {searchTerms}\n\n"\
+                       f"Title: {tasks[taskID]['title']}\nDescription:" \
+                       f"{tasks[taskID]['description']}\nPriority:"\
+                        f"{tasks[taskID]['priority']}\nStatus:"\
+                            f"{tasks[taskID]['status']}\nAssignee:"\
+                                f"{tasks[taskID]['assignee']}")
+        elif searchTerms.lower() == tasks[taskID]["title".lower()]:
+            print(searchTerms)
+            gui.msgbox(msg=f"Found task with the title: {searchTerms}\n\n"\
+                       f"Title: {tasks[taskID]['title']}\nDescription:" \
+                       f"{tasks[taskID]['description']}\nPriority:"\
+                        f"{tasks[taskID]['priority']}\nStatus:"\
+                            f"{tasks[taskID]['status']}\nAssignee:"\
+                                f"{tasks[taskID]['assignee']}")
 
+        else:
+            gui.msgbox("Task not found")
 def updateTask():
     pass
 
@@ -114,7 +132,7 @@ def listTasks():
 
 def startUp():
     while True:
-        choices = ["List task","New task","aP"]
+        choices = ["List task","New task","Search task"]
         init = gui.buttonbox(
             "Welcome to [Generic Task Manager], " \
             "what would you like to do today?","Task manager",
@@ -124,6 +142,8 @@ def startUp():
             listTasks()
         elif init == "New task":
             newTask()
+        elif init == "Search task":
+            searchTask()
         elif init is None:
             exit()
         
