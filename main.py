@@ -108,10 +108,7 @@ def updateTask():
             elif not priority.isdigit():
                 gui.msgbox("Priority must be a positive whole number", "Error")
                 continue
-            elif title != tasks:
-                gui.msgbox("Title doesn't exist yet, try creating a new task"\
-                    " instead", "Error")
-                continue
+
             taskID = f"T{str(len(tasks) + 1)}"
             tasks[taskID] = {
                 "title":title, 
@@ -156,7 +153,7 @@ def newTask():
         return
 
 def listTasks():
-    title  ="Task manager"
+    title = "Task manager"
     msg = "Select your task:"
 
     taskNames = [tasks[task]["title"] for task in tasks]
@@ -173,9 +170,34 @@ def listTasks():
     if choice is None:
         return
 
+def report():
+    Completed = 0
+    InProgress = 0
+    Blocked = 0
+    NotStarted = 0
+
+    for task in tasks:
+        if tasks[task]["Status"] == "Completed":
+            Completed+1
+        elif tasks[task]["Status"] == "In progress":
+            InProgress+1
+        elif tasks[task]["Status"] == "Blocked":
+            Blocked+1
+        elif tasks[task]["Status"] == "Not started":
+            NotStarted+1
+        
+    #gui.msgbox(title="Task manager" msg=f"Project status:\n\nCompleted:{Completed}")
+
 def startUp():
     while True:
-        choices = ["List task","New task","Search task", "Update task", "Exit"]
+        choices = ["List task",
+                   "New task",
+                   "Search task",
+                   "Update task",
+                   "Generate report", 
+                   "Task collection",
+                   "Exit"
+                   ]
         init = gui.buttonbox(
             "Welcome to [Generic Task Manager], " \
             "what would you like to do today?","Task manager",
