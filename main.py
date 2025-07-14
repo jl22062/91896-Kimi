@@ -59,34 +59,42 @@ tasks = {
 }
 
 def searchTask():
-    searchTerms = gui.enterbox("Please enter what you want to search")
-    found = False
-    for taskID in tasks:
-        if searchTerms is None:
-            return
+    searchType = gui.buttonbox(choices=["Task names","Members"], msg="Please enter what you want to search.")
+    if searchType == "Task names":
+        searchTerms = gui.enterbox("Please enter the task's name or ID:")
+        found = False
+        for taskID in tasks:
+            if searchTerms is None:
+                return
 
-        elif searchTerms.lower() == taskID.lower():
-            gui.msgbox(msg=f'Found task with the ID: "{searchTerms}"\n\n'\
-                           f"Title: {tasks[taskID]['title']}\nDescription:" \
-                           f"{tasks[taskID]['description']}\nPriority:"\
-                           f"{tasks[taskID]['priority']}\nStatus:"\
-                           f"{tasks[taskID]['status']}\nAssignee:"\
-                           f"{tasks[taskID]['assignee']}")
-            found = True
-            break
+            elif searchTerms.lower() == taskID.lower():
+                gui.msgbox(msg=f'Found task with the ID: "{searchTerms}"\n\n'\
+                            f"Title: {tasks[taskID]['title']}\nDescription:" \
+                            f"{tasks[taskID]['description']}\nPriority:"\
+                            f"{tasks[taskID]['priority']}\nStatus:"\
+                            f"{tasks[taskID]['status']}\nAssignee:"\
+                            f"{tasks[taskID]['assignee']}")
+                found = True
+                break
 
-        elif searchTerms.lower() == tasks[taskID]["title"].lower():
-            gui.msgbox(msg=f'Found task with the title: "{searchTerms}"\n\n'\
-                           f"Title: {tasks[taskID]['title']}\nDescription:" \
-                           f"{tasks[taskID]['description']}\nPriority:"\
-                           f"{tasks[taskID]['priority']}\nStatus:"\
-                           f"{tasks[taskID]['status']}\nAssignee:"\
-                           f"{tasks[taskID]['assignee']}")
-            found = True
-            break
-    if found == False:
-        gui.msgbox("Task not found.")
-        
+            elif searchTerms.lower() == tasks[taskID]["title"].lower():
+                gui.msgbox(msg=f'Found task with the title: "{searchTerms}"\n\n'\
+                            f"Title: {tasks[taskID]['title']}\nDescription:" \
+                            f"{tasks[taskID]['description']}\nPriority:"\
+                            f"{tasks[taskID]['priority']}\nStatus:"\
+                            f"{tasks[taskID]['status']}\nAssignee:"\
+                            f"{tasks[taskID]['assignee']}")
+                found = True
+                break
+            elif len(searchTerms) == 0:
+                gui.msgbox(msg="Please enter a valid string...")
+                found = True
+                break
+        if found == False:
+            gui.msgbox("Task not found.")
+    elif searchType == "Members":
+        searchTerms = gui.enterbox("Please enter the member's name or ID")
+           
 def updateTask():
     title  ="Task manager"
     msg = "Select the task you want to update:"
