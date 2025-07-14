@@ -58,14 +58,16 @@ tasks = {
     },
 }
 
-def searchTask():
+def search():
     searchType = gui.buttonbox(choices=["Task names","Members"], msg="Please enter what you want to search.")
     if searchType == "Task names":
         searchTerms = gui.enterbox("Please enter the task's name or ID:")
         found = False
         for taskID in tasks:
-            if searchTerms is None:
-                return
+            if searchTerms is None or len(searchTerms) == 0:
+                gui.msgbox(msg="Please enter a valid string...")
+                found = True
+                break
 
             elif searchTerms.lower() == taskID.lower():
                 gui.msgbox(msg=f'Found task with the ID: "{searchTerms}"\n\n'\
@@ -86,15 +88,31 @@ def searchTask():
                             f"{tasks[taskID]['assignee']}")
                 found = True
                 break
-            elif len(searchTerms) == 0:
+        if found == False:
+            gui.msgbox("Task not found.")
+
+    elif searchType == "Members":
+        searchTerms = gui.enterbox("Please enter the member's name or ID")
+        for userID in users:
+            if searchTerms is None or len(searchTerms) == 0:
                 gui.msgbox(msg="Please enter a valid string...")
                 found = True
                 break
-        if found == False:
-            gui.msgbox("Task not found.")
-    elif searchType == "Members":
-        searchTerms = gui.enterbox("Please enter the member's name or ID")
-           
+
+            elif searchTerms.lower() == userID.lower():
+                gui.msgbox(msg=f'Found user with the ID: "{searchTerms}"\n\n'\
+                            f"Name: {users[userID]['name']}\nEmail:" \
+                            f"{users[userID]['email']}")
+                found = True
+                break
+
+            elif searchTerms.lower() == users[userID]["name"].lower():
+                gui.msgbox(msg=f'Found user with the name: "{searchTerms}"\n\n'\
+                            f"Name: {users[userID]['name']}\nEmail:" \
+                            f"{users[userID]['email']}")
+                found = True
+                break
+            
 def updateTask():
     title  ="Task manager"
     msg = "Select the task you want to update:"
@@ -215,8 +233,8 @@ def startUp():
             listTasks()
         elif init == "New task":
             newTask()
-        elif init == "Search task":
-            searchTask()
+        elif init == "Search":
+            search()
         elif init == "Update task":
             updateTask()
         elif init == "Exit":
