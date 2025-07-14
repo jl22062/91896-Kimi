@@ -114,7 +114,7 @@ def updateTask():
                 gui.msgbox("Please enter all values", "Error")
                 continue
             elif not priority.isdigit():
-                gui.msgbox("Priority must be a positive whole number", "Error")
+                gui.msgbox("Priority must be a positive whole number", "Error") 
                 continue
 
             taskID = f"T{str(len(tasks) + 1)}"
