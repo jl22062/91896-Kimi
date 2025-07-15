@@ -59,7 +59,8 @@ tasks = {
 }
 
 def search():
-    searchType = gui.buttonbox(choices=["Task names","Members"], msg="Please enter what you want to search.")
+    searchType = gui.buttonbox(choices=["Task names","Members"],
+                                msg="Please enter what you want to search.")
     if searchType == "Task names":
         searchTerms = gui.enterbox("Please enter the task's name or ID:")
         found = False
@@ -85,7 +86,7 @@ def search():
                             f"{tasks[taskID]['description']}\nPriority:"\
                             f"{tasks[taskID]['priority']}\nStatus:"\
                             f"{tasks[taskID]['status']}\nAssignee:"\
-                            f"{tasks[taskID]['assignee']}")
+                            f"{tasks[taskID]['                  assignee']}")
                 found = True
                 break
         if found == False:
@@ -94,9 +95,7 @@ def search():
     elif searchType == "Members":
         searchTerms = gui.enterbox("Please enter the member's name or ID")
         for userID in users:
-            if searchTerms is None or len(searchTerms) == 0:
-                gui.msgbox(msg="Please enter a valid string...")
-                found = True
+            if searchTerms is None:
                 break
 
             elif searchTerms.lower() == userID.lower():
@@ -110,6 +109,10 @@ def search():
                 gui.msgbox(msg=f'Found user with the name: "{searchTerms}"\n\n'\
                             f"Name: {users[userID]['name']}\nEmail:" \
                             f"{users[userID]['email']}")
+                found = True
+                break
+            elif len(searchTerms) == 0:
+                gui.msgbox(msg="Please enter a valid string...")
                 found = True
                 break
             
@@ -197,31 +200,29 @@ def listTasks():
         return
 
 def report():
-    Completed = 0
-    InProgress = 0
-    Blocked = 0
-    NotStarted = 0
+    title = "Task manager"
+    msg = "Select the task you want a report on:"
 
-    for task in tasks:
-        if tasks[task]["Status"] == "Completed":
-            Completed+1
-        elif tasks[task]["Status"] == "In progress":
-            InProgress+1
-        elif tasks[task]["Status"] == "Blocked":
-            Blocked+1
-        elif tasks[task]["Status"] == "Not started":
-            NotStarted+1
-        
-    #gui.msgbox(title="Task manager" msg=f"Project status:\n\nCompleted:{Completed}")
+    taskNames = [tasks[task]["title"] for task in tasks]
+    choice = gui.choicebox(msg, title, taskNames)
+    for taskID in tasks:
+        if tasks[taskID]["title"] == choice:
+            gui.msgbox(title=tasks[taskID]['title'], 
+                       msg=f"Title: {tasks[taskID]['title']}\nPriority:"\
+                           f"{tasks[taskID]['priority']}\nStatus:"\
+                           f"{tasks[taskID]['status']}\nAssignee:"\
+                           f"{tasks[taskID]['assignee']}")
+
+    if choice is None:
+        return
 
 def startUp():
     while True:
         choices = ["List task",
                    "New task",
-                   "Search task",
+                   "Search",
                    "Update task",
                    "Generate report", 
-                   "Task collection",
                    "Exit"
                    ]
         init = gui.buttonbox(
@@ -237,6 +238,8 @@ def startUp():
             search()
         elif init == "Update task":
             updateTask()
+        elif init == "Generate report":
+            report()
         elif init == "Exit":
             exit()
         elif init is None:
