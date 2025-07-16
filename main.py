@@ -168,6 +168,10 @@ def newTask():
         elif not priority.isdigit():
             gui.msgbox("Priority must be a positive whole number", "Error")
             continue
+        elif int(priority)>3 or int(priority)<1:
+            gui.msgbox("Priority must be between 1 or 3", "Error")
+            continue
+
         elif title in tasks:
             gui.msgbox("Title already exists", "Error")
             continue
