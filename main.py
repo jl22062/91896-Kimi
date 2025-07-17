@@ -171,7 +171,12 @@ def newTask():
         elif int(priority)>3 or int(priority)<1:
             gui.msgbox("Priority must be between 1 or 3", "Error")
             continue
-
+        elif status != "In Progress" or "Blocked" or "Not Started" or "Finished":
+            gui.msgbox("Status must be either Not Started, Blocked, In Progress, or Finished")
+            continue
+        elif assignee != [user for user in users]:
+            gui.msgbox(f"Please enter a valid team member{[user for user in users]}")
+            continue
         elif title in tasks:
             gui.msgbox("Title already exists", "Error")
             continue
@@ -186,22 +191,14 @@ def newTask():
         return
 
 def listTasks():
-    title = "Task manager"
-    msg = "Select your task:"
-
-    taskNames = [tasks[task]["title"] for task in tasks]
-    choice = gui.choicebox(msg, title, taskNames)
-    for taskID in tasks:
-        if tasks[taskID]["title"] == choice:
-            gui.msgbox(title=tasks[taskID]['title'], 
-                       msg=f"Title: {tasks[taskID]['title']}\nDescription:" \
-                           f"{tasks[taskID]['description']}\nPriority:"\
-                           f"{tasks[taskID]['priority']}\nStatus:"\
-                           f"{tasks[taskID]['status']}\nAssignee:"\
-                           f"{tasks[taskID]['assignee']}")
-
-    if choice is None:
-        return
+    taskDetails = ""
+    for task in tasks:
+        taskDetails += f"------\nTitle: {tasks[task]['title']}\nDescription:" \
+                           f"{tasks[task]['description']}\nPriority:"\
+                           f"{tasks[task]['priority']}\nStatus:"\
+                           f"{tasks[task]['status']}\nAssignee:"\
+                           f"{tasks[task]['assignee']}\n"
+    gui.msgbox(taskDetails)
 
 def report():
     title = "Task manager"
@@ -219,6 +216,8 @@ def report():
 
     if choice is None:
         return
+
+#add val for status, has to be a member either code or full name, add val for search, show total task overview for report
 
 def startUp():
     while True:
