@@ -171,11 +171,11 @@ def newTask():
         elif int(priority)>3 or int(priority)<1:
             gui.msgbox("Priority must be between 1 or 3", "Error")
             continue
-        elif status != "In Progress" or "Blocked" or "Not Started" or "Finished":
-            gui.msgbox("Status must be either Not Started, Blocked, In Progress, or Finished")
+        elif status.lower() not in ["in progress",  "blocked",  "not started",  "finished"]:
+            gui.msgbox(f"Status must be either not started, blocked, in Progress, or finished, current status = {status}")
             continue
-        elif assignee != [user for user in users]:
-            gui.msgbox(f"Please enter a valid team member{[user for user in users]}")
+        elif assignee.upper() not in users:
+            gui.msgbox(f"Please enter a valid team member{[user for user in users]}. Current team member = {assignee}")
             continue
         elif title in tasks:
             gui.msgbox("Title already exists", "Error")
@@ -186,7 +186,7 @@ def newTask():
             "description":desc, 
             "priority":priority, 
             "status":status,
-            "assignee":assignee
+            "assignee":assignee.upper()
             }
         return
 
