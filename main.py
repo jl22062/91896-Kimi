@@ -135,16 +135,28 @@ def updateTask():
                 gui.msgbox("Please enter all values", "Error")
                 continue
             elif not priority.isdigit():
-                gui.msgbox("Priority must be a positive whole number", "Error") 
+                gui.msgbox("Priority must be a positive whole number", "Error")
+                continue
+            elif int(priority)>3 or int(priority)<1:
+                gui.msgbox("Priority must be between 1 or 3", "Error")
+                continue
+            elif status.lower().strip() not in ["in progress",  "blocked",  "not started",  "finished"]:
+                gui.msgbox(f"Status must be either not started, blocked, in Progress, or finished, current status = {status}")
+                continue
+            elif assignee.upper().strip() not in users:
+                gui.msgbox(f"Please enter a valid team member{[user for user in users]}. Current team member = {assignee}")
+                continue
+            elif title in tasks:
+                gui.msgbox("Title already exists", "Error")
                 continue
 
             taskID = f"T{str(len(tasks) + 1)}"
             tasks[taskID] = {
-                "title":title, 
-                "description":desc, 
+                "title":title.strip(), 
+                "description":desc.strip(), 
                 "priority":priority, 
-                "status":status,
-                "assignee":assignee
+                "status":status.strip(),
+                "assignee":assignee.strip()
                 }
             return
 
