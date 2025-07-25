@@ -69,7 +69,6 @@ def search():
                 gui.msgbox(msg="Please enter a valid string...")
                 found = True
                 break
-
             elif searchTerms.lower() == taskID.lower():
                 gui.msgbox(msg=f'Found task with the ID: "{searchTerms}"\n\n'\
                             f"Title: {tasks[taskID]['title']}\nDescription:" \
@@ -80,13 +79,13 @@ def search():
                 found = True
                 break
 
-            elif searchTerms.lower() == tasks[taskID]["title"].lower():
+            elif searchTerms.lower() in tasks[taskID]["title"].lower():
                 gui.msgbox(msg=f'Found task with the title: "{searchTerms}"\n\n'\
                             f"Title: {tasks[taskID]['title']}\nDescription:" \
                             f"{tasks[taskID]['description']}\nPriority:"\
                             f"{tasks[taskID]['priority']}\nStatus:"\
                             f"{tasks[taskID]['status']}\nAssignee:"\
-                            f"{tasks[taskID]['                  assignee']}")
+                            f"{tasks[taskID]['assignee']}")
                 found = True
                 break
         if found == False:
@@ -98,14 +97,14 @@ def search():
             if searchTerms is None:
                 break
 
-            elif searchTerms.lower() == userID.lower():
+            elif searchTerms.lower() in userID.lower():
                 gui.msgbox(msg=f'Found user with the ID: "{searchTerms}"\n\n'\
                             f"Name: {users[userID]['name']}\nEmail:" \
                             f"{users[userID]['email']}")
                 found = True
                 break
 
-            elif searchTerms.lower() == users[userID]["name"].lower():
+            elif searchTerms.lower() in users[userID]["name"].lower():
                 gui.msgbox(msg=f'Found user with the name: "{searchTerms}"\n\n'\
                             f"Name: {users[userID]['name']}\nEmail:" \
                             f"{users[userID]['email']}")
