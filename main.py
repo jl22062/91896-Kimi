@@ -2,24 +2,6 @@
 import easygui as gui
 
 #Data
-users = {
-    "JSM": {
-        "name": "John Smith",
-        "email": "John@techvision.com",
-        "password": "WWR"
-    },
-    "JLO":{
-        "name": "Jane Love",
-        "email": "John@techvision.com",
-         "password": "Loober"
-    },
-    "BDI":{
-        "name": "Bob Dillon",
-        "email": "Bob@techvision.com",
-         "password": "Lupis"
-    }
-}
-
 tasks = {
     "T1": {
         "title" : "Design Homepage",
@@ -56,6 +38,24 @@ tasks = {
         "status": "Blocked",
         "assignee": "JSM"
     },
+}
+
+users = {
+    "JSM": {
+        "name": "John Smith",
+        "email": "John@techvision.com",
+        "assigned":[]
+    },
+    "JLO":{
+        "name": "Jane Love",
+        "email": "John@techvision.com",
+        "assigned":[]
+    },
+    "BDI":{
+        "name": "Bob Dillon",
+        "email": "Bob@techvision.com",
+        "assigned":[]
+    }
 }
 
 def search():
@@ -96,18 +96,35 @@ def search():
         for userID in users:
             if searchTerms is None:
                 break
-
             elif searchTerms.lower() in userID.lower():
+                for task_id, task_data in tasks.items():
+                    assignee = task_data["assignee"]
+                    if assignee in users:
+                        users[assignee]["assigned"].append(task_id)
                 gui.msgbox(msg=f'Found user with the ID: "{searchTerms}"\n\n'\
                             f"Name: {users[userID]['name']}\nEmail:" \
-                            f"{users[userID]['email']}")
+                            f"{users[userID]['email']}\nAssigned tasks: "
+                            f"{users[userID]['assigned']}")
+                for task_id, task_data in tasks.items():
+                    assignee = task_data["assignee"]
+                    if assignee in users:
+                        users[assignee]["assigned"].remove(task_id)
                 found = True
                 break
 
-            elif searchTerms.lower() in users[userID]["name"].lower():
-                gui.msgbox(msg=f'Found user with the name: "{searchTerms}"\n\n'\
+            elif searchTerms.lower() in users[userID]["name"].lower(): 
+                for task_id, task_data in tasks.items():
+                    assignee = task_data["assignee"]
+                    if assignee in users:
+                        users[assignee]["assigned"].append(task_id)
+                gui.msgbox(msg=f'Found user with the name: "{searchTerms}"\n\n'
                             f"Name: {users[userID]['name']}\nEmail:" \
-                            f"{users[userID]['email']}")
+                            f"{users[userID]['email']}\nAssigned tasks: "
+                            f"{users[userID]['assigned']}")
+                for task_id, task_data in tasks.items():
+                    assignee = task_data["assignee"]
+                    if assignee in users:
+                        users[assignee]["assigned"].remove(task_id)
                 found = True
                 break
             elif len(searchTerms) == 0:
