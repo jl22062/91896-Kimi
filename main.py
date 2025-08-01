@@ -133,28 +133,29 @@ def search():
                 break
             
 def updateTask():
-    info = []
-    title  ="Task manager"
-    msg = "Select the task you want to update:"
 
     taskNames = [tasks[task]["title"] for task in tasks]
-    edit = gui.choicebox(msg, title, taskNames)
-    for taskID in tasks:
-        if tasks[taskID]["title"] == edit:
-            while True:
-                fields = ["Title", "Description","Priority","Status", "Assignee"]
-                info = gui.multenterbox(
-                    "Please enter task's new details","update task",fields,info)
-                if info is None:
-                    return
-                title, desc, priority = info[0],info[1],info[2]
-                status, assignee = info[3],info[4]
-                if not title or not desc or not priority or not status or not assignee:
-                    gui.msgbox("Please enter all values", "Error")
-                    continue
-                elif not priority.isdigit():
-                    gui.msgbox("Priority must be a positive whole number", "Error")
-                    continue
+    taskSelected = gui.choicebox(msg="Select the task you want to update:", title="Task manager", choices=taskNames)
+    IDSelected = next(taskID for taskID in tasks if tasks[taskID]["title"] == taskSelected)
+    while True:
+        fieldSelected = gui.choicebox(msg="Select what you want to edit:", title="Task manager", choices=list(tasks[IDSelected].keys()))
+        if fieldSelected is None:
+            return
+        info = gui.enterbox(title="Task manager", msg=f"Please enter the new value for {fieldSelected}")
+        if info is None:
+            return
+        
+        elif fieldSelected == "priority":
+            if not info.isdigit() or not (1 <= int(info) <= 3):
+                gui.msgbox("Priority must be a whole number between 1 and 3", "Error")
+                continue
+        tasks[IDSelected][fieldSelected] = info
+        #add more checks
+        return
+    
+    
+"""
+
                 elif int(priority)>3 or int(priority)<1:
                     gui.msgbox("Priority must be between 1 or 3", "Error")
                     continue
@@ -180,7 +181,7 @@ def updateTask():
 
     if edit is None:
         return
-
+"""
 def newTask():
     info = []
     while True:
@@ -203,8 +204,8 @@ def newTask():
         elif int(priority)>3 or int(priority)<1:
             gui.msgbox("Priority must be between 1 or 3", "Error")
             continue
-        elif status.lower() not in ["in progress",  "blocked",  "not started",  "finished"]:
-            gui.msgbox(f"Status must be either not started, blocked, in Progress, or finished, current status = {status}")
+        elif status.lower() not in ["in progress",  "blocked",  "not started",  "completed"]:
+            gui.msgbox(f"Status must be either not started, blocked, in Progress, or completed, current status = {status}")
             continue
         elif assignee.upper() not in users:
             gui.msgbox(f"Please enter a valid team member{[user for user in users]}. Current team member = {assignee}")
@@ -217,7 +218,7 @@ def newTask():
             "title":title, 
             "description":desc, 
             "priority":priority, 
-            "status":status,
+            "status":status.title(),
             "assignee":assignee.upper()
             }
         return
@@ -233,24 +234,17 @@ def listTasks():
     gui.msgbox(taskDetails)
 
 def report():
-    title = "Task manager"
-    msg = "Select the task you want a report on:"
-
-    taskNames = [tasks[task]["title"] for task in tasks]
-    choice = gui.choicebox(msg, title, taskNames)
-    for taskID in tasks:
-        if tasks[taskID]["title"] == choice:
-            gui.msgbox(title=tasks[taskID]['title'], 
-                       msg=f"Title: {tasks[taskID]['title']}\nPriority:"\
-                           f"{tasks[taskID]['priority']}\nStatus:"\
-                           f"{tasks[taskID]['status']}\nAssignee:"\
-                           f"{tasks[taskID]['assignee']}")
-
-    if choice is None:
-        return
-
-#add val for status, has to be a member either code or full name, add val for search, show total task overview for report
-
+    completed, in_progress, blocked, not_started = 0,0,0,0
+    for task in tasks:
+        if tasks[task]["status"] == "Completed":
+            completed += 1
+        elif tasks[task]["status"] == "In Progress":
+            in_progress += 1
+        elif tasks[task]["status"] == "Blocked":
+            blocked += 1
+        elif tasks[task]["status"] == "Not Started":
+            not_started += 1
+    gui.msgbox(f"--- Overall task report ---\nTask completed: {completed}\nTask in progress: {in_progress}\nTask blocked: {blocked}\nTask not started: {not_started}")
 def startUp():
     while True:
         choices = ["List task",
