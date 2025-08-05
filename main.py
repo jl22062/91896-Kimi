@@ -1,38 +1,38 @@
-#Imports
+# Imports
 import easygui as gui
 
-#Data
+# Data
 tasks = {
     "T1": {
-        "title" : "Design Homepage",
+        "title": "Design Homepage",
         "description": "Create a mockup of the homepage",
         "priority": 3,
         "status": "In Progress",
         "assignee": "JSM"
     },
     "T2": {
-        "title" : "Implement Login page",
+        "title": "Implement Login page",
         "description": "Create the Login page for the website",
         "priority": 3,
         "status": "Blocked",
         "assignee": "JLO"
     },
     "T3": {
-        "title" : "Fix navigation menu",
+        "title": "Fix navigation menu",
         "description": "Fix the navigation menu to be more user-friendly",
         "priority": 1,
         "status": "Not Started",
         "assignee": "BDI"
     },
     "T4": {
-        "title" : "Add payment processing",
+        "title": "Add payment processing",
         "description": "Implement payment processing for the website",
         "priority": 2,
         "status": "In Progress",
         "assignee": "BDI"
     },
     "T5": {
-        "title" : "Create an About Us page",
+        "title": "Create an About Us page",
         "description": "Create a page with information about the company",
         "priority": 1,
         "status": "Blocked",
@@ -44,221 +44,216 @@ users = {
     "JSM": {
         "name": "John Smith",
         "email": "John@techvision.com",
-        "assigned":[]
+        "assigned": []
     },
-    "JLO":{
+    "JLO": {
         "name": "Jane Love",
         "email": "John@techvision.com",
-        "assigned":[]
+        "assigned": []
     },
-    "BDI":{
+    "BDI": {
         "name": "Bob Dillon",
         "email": "Bob@techvision.com",
-        "assigned":[]
+        "assigned": []
     }
 }
 
+# Search function
 def search():
-    searchType = gui.buttonbox(choices=["Task names","Members"],
+    searchType = gui.buttonbox(choices=["Task names", "Members"],
                                 msg="Please enter what you want to search.")
     if searchType == "Task names":
         searchTerms = gui.enterbox("Please enter the task's name or ID:")
         found = False
+        if searchTerms is None or len(searchTerms.strip()) == 0:
+            gui.msgbox(msg="Please enter a valid string...")
+            return
+        searchTerms = searchTerms.strip()
         for taskID in tasks:
-            if searchTerms is None or len(searchTerms) == 0:
-                gui.msgbox(msg="Please enter a valid string...")
+            if searchTerms.lower() == taskID.lower():
+                gui.msgbox(msg=f'Found task with the ID: "{searchTerms}"\n\n'
+                               f"Title: {tasks[taskID]['title']}\nDescription: "
+                               f"{tasks[taskID]['description']}\nPriority: "
+                               f"{tasks[taskID]['priority']}\nStatus: "
+                               f"{tasks[taskID]['status']}\nAssignee: "
+                               f"{tasks[taskID]['assignee']}")
                 found = True
                 break
-            elif searchTerms.lower() == taskID.lower():
-                gui.msgbox(msg=f'Found task with the ID: "{searchTerms}"\n\n'\
-                            f"Title: {tasks[taskID]['title']}\nDescription:" \
-                            f"{tasks[taskID]['description']}\nPriority:"\
-                            f"{tasks[taskID]['priority']}\nStatus:"\
-                            f"{tasks[taskID]['status']}\nAssignee:"\
-                            f"{tasks[taskID]['assignee']}")
-                found = True
-                break
-
             elif searchTerms.lower() in tasks[taskID]["title"].lower():
-                gui.msgbox(msg=f'Found task with the title: "{searchTerms}"\n\n'\
-                            f"Title: {tasks[taskID]['title']}\nDescription:" \
-                            f"{tasks[taskID]['description']}\nPriority:"\
-                            f"{tasks[taskID]['priority']}\nStatus:"\
-                            f"{tasks[taskID]['status']}\nAssignee:"\
-                            f"{tasks[taskID]['assignee']}")
+                gui.msgbox(msg=f'Found task with the title: "{searchTerms}"\n\n'
+                               f"Title: {tasks[taskID]['title']}\nDescription: "
+                               f"{tasks[taskID]['description']}\nPriority: "
+                               f"{tasks[taskID]['priority']}\nStatus: "
+                               f"{tasks[taskID]['status']}\nAssignee: "
+                               f"{tasks[taskID]['assignee']}")
                 found = True
                 break
-        if found == False:
+        if not found:
             gui.msgbox("Task not found.")
 
     elif searchType == "Members":
         searchTerms = gui.enterbox("Please enter the member's name or ID")
+        found = False
+        if searchTerms is None or len(searchTerms.strip()) == 0:
+            gui.msgbox(msg="Please enter a valid string...")
+            return
+        searchTerms = searchTerms.strip()
         for userID in users:
-            if searchTerms is None:
-                break
-            elif searchTerms.lower() in userID.lower():
+            search = searchTerms.lower()
+            if search in userID.lower() or search in users[userID]["name"].lower():
                 for task_id, task_data in tasks.items():
                     assignee = task_data["assignee"]
                     if assignee in users:
                         users[assignee]["assigned"].append(task_id)
-                gui.msgbox(msg=f'Found user with the ID: "{searchTerms}"\n\n'\
-                            f"Name: {users[userID]['name']}\nEmail:" \
-                            f"{users[userID]['email']}\nAssigned tasks: "
-                            f"{users[userID]['assigned']}")
+                gui.msgbox(msg=f'Found user: "{searchTerms}"\n\n'
+                               f"Name: {users[userID]['name']}\nEmail: "
+                               f"{users[userID]['email']}\nAssigned tasks: "
+                               f"{users[userID]['assigned']}")
                 for task_id, task_data in tasks.items():
                     assignee = task_data["assignee"]
                     if assignee in users:
                         users[assignee]["assigned"].remove(task_id)
                 found = True
                 break
+        if not found:
+            gui.msgbox("User not found.")
 
-            elif searchTerms.lower() in users[userID]["name"].lower(): 
-                for task_id, task_data in tasks.items():
-                    assignee = task_data["assignee"]
-                    if assignee in users:
-                        users[assignee]["assigned"].append(task_id)
-                gui.msgbox(msg=f'Found user with the name: "{searchTerms}"\n\n'
-                            f"Name: {users[userID]['name']}\nEmail:" \
-                            f"{users[userID]['email']}\nAssigned tasks: "
-                            f"{users[userID]['assigned']}")
-                for task_id, task_data in tasks.items():
-                    assignee = task_data["assignee"]
-                    if assignee in users:
-                        users[assignee]["assigned"].remove(task_id)
-                found = True
-                break
-            elif len(searchTerms) == 0:
-                gui.msgbox(msg="Please enter a valid string...")
-                found = True
-                break
-            
+# Update function         
 def updateTask():
-
     taskNames = [tasks[task]["title"] for task in tasks]
-    taskSelected = gui.choicebox(msg="Select the task you want to update:", title="Task manager", choices=taskNames)
-    IDSelected = next(taskID for taskID in tasks if tasks[taskID]["title"] == taskSelected)
+    taskSelected = gui.choicebox(
+        msg="Select the task you want to update:", 
+        title="Task manager", choices=taskNames
+        )
+    if not taskSelected:
+        return
+    for taskID in tasks:
+        if tasks[taskID]["title"] == taskSelected:
+            IDSelected = taskID
     while True:
-        fieldSelected = gui.choicebox(msg="Select what you want to edit:", title="Task manager", choices=list(tasks[IDSelected].keys()))
+        fieldSelected = gui.choicebox(
+            msg="Select what you want to edit:", 
+            title="Task manager", choices=list(tasks[IDSelected].keys()))
         if fieldSelected is None:
             return
-        info = gui.enterbox(title="Task manager", msg=f"Please enter the new value for {fieldSelected}")
-        if info is None:
-            return
-        
-        elif fieldSelected == "priority":
-            if not info.isdigit() or not (1 <= int(info) <= 3):
-                gui.msgbox("Priority must be a whole number between 1 and 3", "Error")
-                continue
-        tasks[IDSelected][fieldSelected] = info
-        #add more checks
-        return
-    
-    
-"""
-
-                elif int(priority)>3 or int(priority)<1:
-                    gui.msgbox("Priority must be between 1 or 3", "Error")
-                    continue
-                elif status.lower().strip() not in ["in progress",  "blocked",  "not started",  "finished"]:
-                    gui.msgbox(f"Status must be either not started, blocked, in Progress, or finished, current status = {status}")
-                    continue
-                elif assignee.upper().strip() not in users:
-                    gui.msgbox(f"Please enter a valid team member{[user for user in users]}. Current team member = {assignee}")
-                    continue
-                elif title in tasks:
-                    gui.msgbox("Title already exists", "Error")
-                    continue
-
-                taskID = f"T{str(len(tasks) + 1)}"
-                tasks[taskID] = {
-                    "title":title.strip(), 
-                    "description":desc.strip(), 
-                    "priority":priority, 
-                    "status":status.strip(),
-                    "assignee":assignee.strip()
-                    }
-                return
-
-    if edit is None:
-        return
-"""
-def newTask():
-    info = []
-    while True:
-        fields = ["Title", "Description","Priority","Status", "Assignee"]
-        info = gui.multenterbox(
-            "Please enter task details","Add new tasks",
-            fields,
-            info
+        info = gui.enterbox(
+            title="Task manager", 
+            msg=f"Please enter the new value for {fieldSelected}"
             )
         if info is None:
             return
-        title, desc, priority = info[0],info[1],info[2]
-        status, assignee = info[3],info[4]
+        info = info.strip()
+        if fieldSelected == "priority":
+            if not info.isdigit() or not (1 <= int(info) <= 3):
+                gui.msgbox("Priority must be a whole number between 1 and 3", "Error")
+                continue
+            else:
+                tasks[IDSelected][fieldSelected] = info
+                return
+        elif fieldSelected == "status":
+            if info.lower() not in ["in progress", "blocked", "not started", "completed"]:
+                gui.msgbox(
+                    f"Status must be either Not Started, Blocked,"
+                    f"In Progress, or Completed. Current = {info}"
+                    )
+                continue
+            else:    
+                tasks[IDSelected][fieldSelected] = info.title()
+                return
+        elif fieldSelected == "assignee":
+            if info.upper() not in users:
+                gui.msgbox(
+                    f"Please enter a valid team member {list(users.keys())}. Current = {info}"
+                    )
+                continue
+            else:
+                tasks[IDSelected][fieldSelected] = info.upper()
+                return
+
+# New Task function
+def newTask():
+    info = []
+    while True:
+        fields = ["Title", "Description", "Priority", "Status", "Assignee"]
+        info = gui.multenterbox("Please enter task details", "Add new tasks", fields, info)
+        if info is None:
+            return
+        title, desc, priority = info[0].strip(), info[1].strip(), info[2].strip()
+        status, assignee = info[3].strip(), info[4].strip()
         if not title or not desc or not priority or not status or not assignee:
             gui.msgbox("Please enter all values", "Error")
             continue
         elif not priority.isdigit():
             gui.msgbox("Priority must be a positive whole number", "Error")
             continue
-        elif int(priority)>3 or int(priority)<1:
+        elif int(priority) > 3 or int(priority) < 1:
             gui.msgbox("Priority must be between 1 or 3", "Error")
             continue
-        elif status.lower() not in ["in progress",  "blocked",  "not started",  "completed"]:
-            gui.msgbox(f"Status must be either not started, blocked, in Progress, or completed, current status = {status}")
+        elif status.lower() not in ["in progress", "blocked", "not started", "completed"]:
+            gui.msgbox(
+                f"Status must be either Not Started, Blocked,"
+                f"In Progress, or Completed. Current = {status}"
+                )
             continue
         elif assignee.upper() not in users:
-            gui.msgbox(f"Please enter a valid team member{[user for user in users]}. Current team member = {assignee}")
+            gui.msgbox(
+                f"Please enter a valid team member {list(users.keys())}. Current = {assignee}"
+                )
             continue
-        elif title in tasks:
+        elif title in [task["title"] for task in tasks.values()]:
             gui.msgbox("Title already exists", "Error")
             continue
         taskID = f"T{str(len(tasks) + 1)}"
         tasks[taskID] = {
-            "title":title, 
-            "description":desc, 
-            "priority":priority, 
-            "status":status.title(),
-            "assignee":assignee.upper()
-            }
+            "title": title,
+            "description": desc,
+            "priority": int(priority),
+            "status": status.title(),
+            "assignee": assignee.upper()
+        }
         return
 
+# Listing task function
 def listTasks():
     taskDetails = ""
     for task in tasks:
-        taskDetails += f"------\nTitle: {tasks[task]['title']}\nDescription:" \
-                           f"{tasks[task]['description']}\nPriority:"\
-                           f"{tasks[task]['priority']}\nStatus:"\
-                           f"{tasks[task]['status']}\nAssignee:"\
-                           f"{tasks[task]['assignee']}\n"
+        taskDetails += f"------\nTitle: {tasks[task]['title']}\nDescription: " \
+                       f"{tasks[task]['description']}\nPriority: " \
+                       f"{tasks[task]['priority']}\nStatus: " \
+                       f"{tasks[task]['status']}\nAssignee: " \
+                       f"{tasks[task]['assignee']}\n"
     gui.msgbox(taskDetails)
 
+# Report function
 def report():
-    completed, in_progress, blocked, not_started = 0,0,0,0
-    for task in tasks:
-        if tasks[task]["status"] == "Completed":
+    completed, in_progress, blocked, not_started = 0, 0, 0, 0
+    for task in tasks.values():
+        if task["status"] == "Completed":
             completed += 1
-        elif tasks[task]["status"] == "In Progress":
+        elif task["status"] == "In Progress":
             in_progress += 1
-        elif tasks[task]["status"] == "Blocked":
+        elif task["status"] == "Blocked":
             blocked += 1
-        elif tasks[task]["status"] == "Not Started":
+        elif task["status"] == "Not Started":
             not_started += 1
-    gui.msgbox(f"--- Overall task report ---\nTask completed: {completed}\nTask in progress: {in_progress}\nTask blocked: {blocked}\nTask not started: {not_started}")
+    gui.msgbox(f"--- Overall task report ---\n"
+               f"Task completed: {completed}\n"
+               f"Task in progress: {in_progress}\n"
+               f"Task blocked: {blocked}\n"
+               f"Task not started: {not_started}")
+
+# Initial startup
 def startUp():
     while True:
         choices = ["List task",
                    "New task",
                    "Search",
                    "Update task",
-                   "Generate report", 
+                   "Generate report",
                    "Exit"
                    ]
-        init = gui.buttonbox(
-            "Welcome to [Generic Task Manager], " \
-            "what would you like to do today?","Task manager",
-            choices
-            )
+        init = gui.buttonbox("Welcome to [Generic Task Manager], "
+                             "what would you like to do today?", "Task manager", choices)
         if init == "List task":
             listTasks()
         elif init == "New task":
@@ -269,9 +264,8 @@ def startUp():
             updateTask()
         elif init == "Generate report":
             report()
-        elif init == "Exit":
+        elif init == "Exit" or init is None:
             exit()
-        elif init is None:
-            exit()
-        
+
+# Runs the main start up function    
 startUp()
