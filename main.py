@@ -167,7 +167,7 @@ def updateTask():
                 gui.msgbox("Priority must be a whole number between 1 and 3", "Error")
                 continue
             else:
-                tasks[IDSelected][fieldSelected] = info
+                tasks[IDSelected][fieldSelected] = int(info)
                 return
         # Status check
         elif fieldSelected == "status":
